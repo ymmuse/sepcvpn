@@ -49,24 +49,37 @@ JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_stopVPN(
   stop_vpn();
 }
 
-JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_setUID(
-    JNIEnv *env, jobject instance, jint uid, jboolean remove) {
+JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_addAllowedApplication(
+    JNIEnv *env, jobject instance, jint appUID) {
   if (g_select_uids == NULL) {
     utarray_new(g_select_uids, &ut_int_icd);
   }
 
   int *p = (int *)utarray_front(g_select_uids);
   for (; p != NULL; p = (int *)utarray_next(g_select_uids, p)) {
-    if (*p == uid)
+    if (*p == appUID)
       break;
   }
 
-  if (remove == JNI_TRUE) {
-    if (p != NULL) {
+  if (p == NULL) {
+    utarray_push_back(g_select_uids, &appUID);
+  }
+}
+
+JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_addDisallowedApplication(
+    JNIEnv *env, jobject instance, jint appUID) {
+  if (g_select_uids == NULL) {
+    return
+  }
+
+  int *p = (int *)utarray_front(g_select_uids);
+  for (; p != NULL; p = (int *)utarray_next(g_select_uids, p)) {
+    if (*p == appUID)
+      break;
+  }
+
+  if (p != NULL) {
       int idx = utarray_eltidx(g_select_uids, p);
       utarray_erase(g_select_uids, idx, 1);
-    }
-  } else if (p == NULL) {
-    utarray_push_back(g_select_uids, &uid);
   }
 }
