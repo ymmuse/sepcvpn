@@ -2,7 +2,7 @@
 
 Only support tcp stream for now
 
-## Expose APIS with java 
+## Expose API in java 
 
 ```java
     // onNetTrafficChange will be called in jni
