@@ -68,18 +68,16 @@ JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_addAllowedApplicati
 
 JNIEXPORT void JNICALL Java_com_spec_uid_vpn_LocalVpnService_addDisallowedApplication(
     JNIEnv *env, jobject instance, jint appUID) {
-  if (g_select_uids == NULL) {
-    return
-  }
+  if (g_select_uids) {
+    int *p = (int *)utarray_front(g_select_uids);
+    for (; p != NULL; p = (int *)utarray_next(g_select_uids, p)) {
+      if (*p == appUID)
+        break;
+    }
 
-  int *p = (int *)utarray_front(g_select_uids);
-  for (; p != NULL; p = (int *)utarray_next(g_select_uids, p)) {
-    if (*p == appUID)
-      break;
-  }
-
-  if (p != NULL) {
-      int idx = utarray_eltidx(g_select_uids, p);
-      utarray_erase(g_select_uids, idx, 1);
+    if (p != NULL) {
+        int idx = utarray_eltidx(g_select_uids, p);
+        utarray_erase(g_select_uids, idx, 1);
+    }
   }
 }

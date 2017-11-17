@@ -2,6 +2,9 @@
 
 Only support tcp stream for now
 
+## Build
+ ndk-build -C ./jni
+
 ## Expose API in java 
 
 ```java
